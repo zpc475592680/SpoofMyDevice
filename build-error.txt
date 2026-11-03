@@ -1,0 +1,33 @@
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so. Run with --info option to learn more.
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+---TAIL---
+QFQhgfgg+DZXgotViHlU+yu5NxQM8w5CSjpMWTmHRx43fhcuFj0aqEaZmyvgBXHwd6KLWE1y3rMjqAv6pdsMjKUesQPjF2rGDLrGFeBCnmri4WKtGChaIBC63jCLCXjqWiEUzrBjoXopphGOwK3Onvd7E3ecriX8vuXR7Fi8diK0r/XG8+Y3U+W6/IR6WqD067Hj7jEsWKvusSpVapKtY+MALd/OHCjzlY2vifvpcxtni6B5/MFo7aE9yq+CfGnFfXUb15e02ux45Uu+RbAv6gh3JMPx4WnIG8aw/QWXp8tVT+PhQouWoQ72+mpKpWL++PL8CfX/ruq4AUdzsDYc6QyVlGdy24otvyJ2RRaEA/yKjGqheHyPSuX3qPjRoRW7mvRdG/oyArGbPURz9jafK6UlhhaME0wMTANBglghkgBZQMEAgEFAAQgH+FSB99zRbaT+fLWj1fuD1zDH3WS0UDSuI9C3ep70LIEFEWYr9YuqANMt1oZ+XBryPncIhdgAgInEA==
++ ls -la /tmp/huanji.jks
+-rw-r--r-- 1 runner runner 2716 Nov  3 16:05 /tmp/huanji.jks
++ printf %s 5ffda0315764b0917103ef40
++ printf %s 5ffda0315764b0917103ef40
+++ ls -d /usr/local/lib/android/sdk/build-tools/34.0.0 /usr/local/lib/android/sdk/build-tools/35.0.0 /usr/local/lib/android/sdk/build-tools/35.0.1 /usr/local/lib/android/sdk/build-tools/36.0.0 /usr/local/lib/android/sdk/build-tools/36.1.0 /usr/local/lib/android/sdk/build-tools/37.0.0
+++ sort -V
+++ tail -1
++ BT=/usr/local/lib/android/sdk/build-tools/37.0.0
++ echo BT=/usr/local/lib/android/sdk/build-tools/37.0.0
+BT=/usr/local/lib/android/sdk/build-tools/37.0.0
++ ls -la app/build/outputs/apk/release/
+total 16844
+drwxr-xr-x 3 runner runner     4096 Nov  3 16:05 .
+drwxr-xr-x 3 runner runner     4096 Nov  3 16:05 ..
+-rw-r--r-- 1 runner runner 17230555 Nov  3 16:05 app-release-unsigned.apk
+drwxr-xr-x 4 runner runner     4096 Nov  3 16:05 baselineProfiles
+-rw-r--r-- 1 runner runner      743 Nov  3 16:05 output-metadata.json
+++ ls app/build/outputs/apk/release/app-release-unsigned.apk
+++ head -1
++ UNSIGNED=app/build/outputs/apk/release/app-release-unsigned.apk
++ '[' -z app/build/outputs/apk/release/app-release-unsigned.apk ']'
++ echo UNSIGNED=app/build/outputs/apk/release/app-release-unsigned.apk
+UNSIGNED=app/build/outputs/apk/release/app-release-unsigned.apk
++ ALIGNED=app/build/outputs/apk/release/app-release-aligned.apk
++ SIGNED=app/build/outputs/apk/release/huanji-release-signed.apk
++ /usr/local/lib/android/sdk/build-tools/37.0.0/zipalign -f 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release-aligned.apk
++ /usr/local/lib/android/sdk/build-tools/37.0.0/apksigner sign --ks /tmp/huanji.jks --ks-pass:file /tmp/ks.pass --key-pass:file /tmp/kp.pass --ks-key-alias ruanjian --out app/build/outputs/apk/release/huanji-release-signed.apk app/build/outputs/apk/release/app-release-aligned.apk
+Unsupported option: --ks-pass:file. See --help for supported options.
