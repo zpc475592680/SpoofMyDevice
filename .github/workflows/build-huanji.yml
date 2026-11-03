@@ -24,46 +24,27 @@ jobs:
           ./gradlew assembleRelease --stacktrace 2>&1 | tee /tmp/build.log
       - name: Report error log
         if: failure()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            let log = '';
-            try { log = fs.readFileSync('/tmp/build.log', 'utf8'); } catch (e) { log = 'no log: ' + e; }
-            const lines = log.split('\n');
-            const errs = lines.filter(l => /e:|error|FAILED|FAILED|Execution failed|What went wrong/i.test(l)).slice(0, 50).join('\n');
-            const tail = lines.slice(-30).join('\n');
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: 'huanji2 build error',
-              body: 'ERR:\n```\n' + errs.slice(0, 2500) + '\n```\nTAIL:\n```\n' + tail.slice(0, 2500) + '\n```'
-            })
-      - name: Sign with fixed key
         env:
-          SIGNING_KEYSTORE_B64: ${{ secrets.SIGNING_KEYSTORE_B64 }}
-          SIGNING_STORE_PASS: ${{ secrets.SIGNING_STORE_PASS }}
-          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-          SIGNING_KEY_PASS: ${{ secrets.SIGNING_KEY_PASS }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          set -e
-          echo "$SIGNING_KEYSTORE_B64" | base64 -d > /tmp/huanji.jks
-          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
-          UNSIGNED=app/build/outputs/apk/release/app-release-unsigned.apk
-          ALIGNED=app/build/outputs/apk/release/app-release-aligned.apk
-          SIGNED=app/build/outputs/apk/release/huanji-release-signed.apk
-          ls -la app/build/outputs/apk/release/
-          "$BT/zipalign" -f 4 "$UNSIGNED" "$ALIGNED"
-          "$BT/apksigner" sign --ks /tmp/huanji.jks --ks-pass:env SIGNING_STORE_PASS --key-pass:env SIGNING_KEY_PASS --ks-key-alias "$SIGNING_KEY_ALIAS" --out "$SIGNED" "$ALIGNED"
-          rm -f /tmp/huanji.jks
-          "$BT/apksigner" verify --print-certs "$SIGNED" | head -5
-      - uses: actions/upload-artifact@v4
-        with:
-          name: huanji-apk
-          path: app/build/outputs/apk/release/huanji-release-signed.apk
-      - name: Publish release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v2.0.1-huanji2
-          name: å¹»æº v2.0.1-huanji2
-          files: app/build/outputs/apk/release/huanji-release-signed.apk
+          python3 - <<'PYEOF'
+          import re, base64, json, urllib.request, os
+          log = open('/tmp/build.log', encoding='utf-8', errors='replace').read()
+          lines = log.splitlines()
+          errs = [l for l in lines if re.search(r'e:|error|FAILED|Execution failed|What went wrong|Caused by', l, re.I)][:60]
+          tail = lines[-25:]
+          body = 'ERR:\n' + '\n'.join(errs)[:3000] + '\nTAIL:\n' + '\n'.join(tail)[:3000]
+          repo = '${{ github.repository }}'
+          tok = os.environ['GH_TOKEN']
+          def api(path, data=None, method='GET'):
+              req = urllib.request.Request('https://api.github.com' + path, data=json.dumps(data).encode() if data else None, headers={'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'}, method=method)
+              return json.load(urllib.request.urlopen(req))
+          try:
+              cur = api('/repos/' + repo + '/contents/build-error.txt?ref=huanji2')
+              sha = cur.get('sha')
+          except Exception:
+              sha = None
+          payload = {'message': 'huanji2 build error log', 'content': base64.b64encode(body.encode()).decode(), 'branch': 'huanji2'}
+          if sha: payload['sha'] = sha
+          api('/repos/' + repo + '/contents/build-error.txt', payload, 'PUT')
+          PYEOF
