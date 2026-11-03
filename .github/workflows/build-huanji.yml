@@ -3,6 +3,8 @@ on:
   workflow_dispatch:
   push:
     branches: [huanji2]
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -74,5 +76,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v2.0.1-huanji2
-          name: 幻机 v2.0.1-huanji2
+          name: å¹»æº v2.0.1-huanji2
           files: app/build/outputs/apk/release/huanji-release-signed.apk
