@@ -216,4 +216,20 @@
     <string name="safe_mode_selected_count">%1$d개 선택됨</string>
     <string name="safe_mode_dont_show_again">다시 보지 않기</string>
     <string name="safe_mode_more_options">더보기</string>
+
+    <string name="apps_sort_configured_first">Configured first</string>
+    <string name="apps_sort_by_name">Sort by name</string>
+    <string name="apps_sort_by_package">Sort by package</string>
+    <string name="apps_status_format">%1$d configured · %2$d apps</string>
+    <string name="app_data_title">App data</string>
+    <string name="app_data_summary">Manage data for %1$s. Clear to reset login/cache before spoofing.</string>
+    <string name="app_data_clear">Clear data</string>
+    <string name="app_data_force_stop">Force stop</string>
+    <string name="app_data_open_settings">Open app info</string>
+    <string name="app_data_need_root">Clear/force-stop runs “pm clear / am force-stop” via root (su). Without root it jumps to system app info for manual clear.</string>
+    <string name="app_data_working">Working…</string>
+    <string name="app_data_cleared">App data cleared. Reopen the app to take effect.</string>
+    <string name="app_data_stopped">App force-stopped.</string>
+    <string name="app_data_clear_fail_open">No root, jumped to app info — please clear manually.</string>
+    <string name="app_data_stop_fail_open">No root, jumped to app info — please force-stop manually.</string>
 </resources>
