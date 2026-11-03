@@ -185,7 +185,7 @@ fun SpoofMyDeviceApp(appState: SpoofAppState) {
                                                 )
                                             },
                                             onClick = {
-                                                appState.setAppsSortMode(AppSettingsStore.APPS_SORT_NAME)
+                                                appState.updateAppsSortMode(AppSettingsStore.APPS_SORT_NAME)
                                             },
                                         )
                                         DropdownMenuItem(
@@ -197,7 +197,7 @@ fun SpoofMyDeviceApp(appState: SpoofAppState) {
                                                 )
                                             },
                                             onClick = {
-                                                appState.setAppsSortMode(AppSettingsStore.APPS_SORT_PACKAGE)
+                                                appState.updateAppsSortMode(AppSettingsStore.APPS_SORT_PACKAGE)
                                             },
                                         )
                                     }

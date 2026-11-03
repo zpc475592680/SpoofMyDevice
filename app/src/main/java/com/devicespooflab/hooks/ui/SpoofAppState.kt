@@ -310,7 +310,7 @@ class SpoofAppState(val activity: AppCompatActivity) {
         AppSettingsStore.setAppsHideSystem(activity, hideSystemAppsInAppSettings)
     }
 
-    fun setAppsSortMode(mode: String) {
+    fun updateAppsSortMode(mode: String) {
         val v = if (mode == AppSettingsStore.APPS_SORT_PACKAGE) AppSettingsStore.APPS_SORT_PACKAGE else AppSettingsStore.APPS_SORT_NAME
         appsSortMode = v
         AppSettingsStore.setAppsSortMode(activity, v)
