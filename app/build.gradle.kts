@@ -11,8 +11,8 @@ android {
         applicationId = "com.spoofmydevice"
         minSdk = 26
         targetSdk = 37
-        versionCode = 10
-        versionName = "2.0.1"
+        versionCode = 12
+        versionName = "2.0.1-huanji2"
     }
 
     buildTypes {
