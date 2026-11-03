@@ -48,3 +48,31 @@ jobs:
           if sha: payload['sha'] = sha
           api('/repos/' + repo + '/contents/build-error.txt', payload, 'PUT')
           PYEOF
+      - name: Sign with fixed key
+        env:
+          SIGNING_KEYSTORE_B64: ${{ secrets.SIGNING_KEYSTORE_B64 }}
+          SIGNING_STORE_PASS: ${{ secrets.SIGNING_STORE_PASS }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASS: ${{ secrets.SIGNING_KEY_PASS }}
+        run: |
+          set -e
+          echo "$SIGNING_KEYSTORE_B64" | base64 -d > /tmp/huanji.jks
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          UNSIGNED=app/build/outputs/apk/release/app-release-unsigned.apk
+          ALIGNED=app/build/outputs/apk/release/app-release-aligned.apk
+          SIGNED=app/build/outputs/apk/release/huanji-release-signed.apk
+          ls -la app/build/outputs/apk/release/
+          "$BT/zipalign" -f 4 "$UNSIGNED" "$ALIGNED"
+          "$BT/apksigner" sign --ks /tmp/huanji.jks --ks-pass:env SIGNING_STORE_PASS --key-pass:env SIGNING_KEY_PASS --ks-key-alias "$SIGNING_KEY_ALIAS" --out "$SIGNED" "$ALIGNED"
+          rm -f /tmp/huanji.jks
+          "$BT/apksigner" verify --print-certs "$SIGNED" | head -5
+      - uses: actions/upload-artifact@v4
+        with:
+          name: huanji-apk
+          path: app/build/outputs/apk/release/huanji-release-signed.apk
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v2.0.1-huanji2
+          name: 幻机 v2.0.1-huanji2
+          files: app/build/outputs/apk/release/huanji-release-signed.apk

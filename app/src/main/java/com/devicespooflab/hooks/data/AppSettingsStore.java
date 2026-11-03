@@ -32,6 +32,11 @@ public final class AppSettingsStore {
     private static final String KEY_COLOR_STYLE = "color_style";
     private static final String KEY_PRESET_SOURCE_URL = "preset_source_url";
     private static final String KEY_SAFE_MODE_EXPLANATION_DISMISSED = "safe_mode_explanation_dismissed";
+    public static final String APPS_SORT_NAME = "name";
+    public static final String APPS_SORT_PACKAGE = "package";
+    private static final String KEY_APPS_SORT_MODE = "apps_sort_mode";
+    private static final String KEY_APPS_CONFIGURED_FIRST = "apps_configured_first";
+    private static final String KEY_APPS_HIDE_SYSTEM = "apps_hide_system";
 
     private AppSettingsStore() {
     }
@@ -86,6 +91,33 @@ public final class AppSettingsStore {
         preferences(context).edit()
             .putString(KEY_PRESET_SOURCE_URL, normalizePresetSourceUrl(value))
             .apply();
+    }
+
+    public static String getAppsSortMode(Context context) {
+        String v = preferences(context).getString(KEY_APPS_SORT_MODE, APPS_SORT_NAME);
+        if (APPS_SORT_PACKAGE.equals(v)) return APPS_SORT_PACKAGE;
+        return APPS_SORT_NAME;
+    }
+
+    public static void setAppsSortMode(Context context, String value) {
+        if (!APPS_SORT_PACKAGE.equals(value)) value = APPS_SORT_NAME;
+        preferences(context).edit().putString(KEY_APPS_SORT_MODE, value).apply();
+    }
+
+    public static boolean isAppsConfiguredFirst(Context context) {
+        return preferences(context).getBoolean(KEY_APPS_CONFIGURED_FIRST, true);
+    }
+
+    public static void setAppsConfiguredFirst(Context context, boolean enabled) {
+        preferences(context).edit().putBoolean(KEY_APPS_CONFIGURED_FIRST, enabled).apply();
+    }
+
+    public static boolean isAppsHideSystem(Context context) {
+        return preferences(context).getBoolean(KEY_APPS_HIDE_SYSTEM, true);
+    }
+
+    public static void setAppsHideSystem(Context context, boolean hide) {
+        preferences(context).edit().putBoolean(KEY_APPS_HIDE_SYSTEM, hide).apply();
     }
 
     public static boolean isSafeModeExplanationDismissed(Context context) {
