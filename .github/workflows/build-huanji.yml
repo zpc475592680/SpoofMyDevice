@@ -45,10 +45,12 @@ jobs:
           rm -f /tmp/huanji.jks /tmp/ks.pass /tmp/kp.pass
           "$BT/apksigner" verify --print-certs "$SIGNED" | head -5
       - uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: huanji-apk
           path: app/build/outputs/apk/release/huanji-release-signed.apk
       - name: Publish release
+        if: success()
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v2.0.1-huanji2
@@ -57,11 +59,30 @@ jobs:
       - name: Report error log
         if: failure()
         run: |
-          grep -aE "e: |error:|FAILED|Execution failed|What went wrong|Caused by|Exception" /tmp/build.log | head -c 6000 > build-error.txt || true
-          echo '---TAIL---' >> build-error.txt
-          tail -c 2500 /tmp/build.log >> build-error.txt || true
+          set +e
+          echo "run=${{ github.run_id }} sha=${{ github.sha }} time=$(date -u +%FT%TZ)" > build-error.txt
+          if [ -f /tmp/build.log ]; then
+            cp /tmp/build.log ./build-full.log
+            sed -e 's/${{ secrets.SIGNING_STORE_PASS }}/***/g' -e 's/${{ secrets.SIGNING_KEY_PASS }}/***/g' /tmp/build.log > /tmp/build-clean.log || cp /tmp/build.log /tmp/build-clean.log
+            grep -aE "e: |error:|FAILED|Execution failed|What went wrong|Caused by|Exception" /tmp/build-clean.log | head -c 6000 >> build-error.txt || true
+            echo '' >> build-error.txt
+            echo '---TAIL---' >> build-error.txt
+            tail -c 2500 /tmp/build-clean.log >> build-error.txt || true
+          else
+            echo "no /tmp/build.log (failed before build step)" >> build-error.txt
+          fi
+          echo "### huanji2 build failed" >> $GITHUB_STEP_SUMMARY
+          echo "run ${{ github.run_id }}, log pushed to branch file build-error.txt (no email sent)" >> $GITHUB_STEP_SUMMARY
           git config user.email "bot@local"
           git config user.name "huanji-bot"
           git add -f build-error.txt
-          git commit -m "huanji2 build error log" || true
+          git commit -m "huanji2 build error log run ${{ github.run_id }} [skip ci]" || true
           git push origin HEAD:huanji2 || true
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: huanji-failure-logs
+          path: |
+            build-error.txt
+            build-full.log
