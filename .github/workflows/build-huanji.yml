@@ -24,17 +24,6 @@ jobs:
           set -o pipefail
           chmod +x gradlew
           ./gradlew assembleRelease --stacktrace 2>&1 | tee /tmp/build.log
-      - name: Report error log
-        if: failure()
-        run: |
-          grep -aE "e: |error:|FAILED|Execution failed|What went wrong|Caused by" /tmp/build.log | head -c 6000 > build-error.txt || true
-          echo '---TAIL---' >> build-error.txt
-          tail -c 2000 /tmp/build.log >> build-error.txt || true
-          git config user.email "bot@local"
-          git config user.name "huanji-bot"
-          git add -f build-error.txt
-          git commit -m "huanji2 build error log" || true
-          git push origin HEAD:huanji2 || true
       - name: Sign with fixed key
         env:
           SIGNING_KEYSTORE_B64: ${{ secrets.SIGNING_KEYSTORE_B64 }}
@@ -42,7 +31,9 @@ jobs:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASS: ${{ secrets.SIGNING_KEY_PASS }}
         run: |
+          set -o pipefail
           set -ex
+          {
           echo "$SIGNING_KEYSTORE_B64" | base64 -d > /tmp/huanji.jks
           ls -la /tmp/huanji.jks
           printf '%s' "$SIGNING_STORE_PASS" > /tmp/ks.pass
@@ -59,6 +50,7 @@ jobs:
           "$BT/apksigner" sign --ks /tmp/huanji.jks --ks-pass:file /tmp/ks.pass --key-pass:file /tmp/kp.pass --ks-key-alias "$SIGNING_KEY_ALIAS" --out "$SIGNED" "$ALIGNED"
           rm -f /tmp/huanji.jks /tmp/ks.pass /tmp/kp.pass
           "$BT/apksigner" verify --print-certs "$SIGNED" | head -5
+          } 2>&1 | tee -a /tmp/build.log
       - uses: actions/upload-artifact@v4
         with:
           name: huanji-apk
@@ -69,3 +61,14 @@ jobs:
           tag_name: v2.0.1-huanji2
           name: 幻机 v2.0.1-huanji2
           files: app/build/outputs/apk/release/huanji-release-signed.apk
+      - name: Report error log
+        if: failure()
+        run: |
+          grep -aE "e: |error:|FAILED|Execution failed|What went wrong|Caused by|Exception" /tmp/build.log | head -c 6000 > build-error.txt || true
+          echo '---TAIL---' >> build-error.txt
+          tail -c 2500 /tmp/build.log >> build-error.txt || true
+          git config user.email "bot@local"
+          git config user.name "huanji-bot"
+          git add -f build-error.txt
+          git commit -m "huanji2 build error log" || true
+          git push origin HEAD:huanji2 || true
