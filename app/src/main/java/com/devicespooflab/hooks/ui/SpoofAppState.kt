@@ -61,6 +61,10 @@ class SpoofAppState(val activity: AppCompatActivity) {
         private set
     var hideSystemAppsInAppSettings by mutableStateOf(true)
         private set
+    var appsSortMode by mutableStateOf(AppSettingsStore.APPS_SORT_NAME)
+        private set
+    var appsConfiguredFirst by mutableStateOf(true)
+        private set
     var installedApps by mutableStateOf(cachedInstalledApps.orEmpty())
         private set
     var installedAppsLoaded by mutableStateOf(cachedInstalledApps != null)
@@ -99,7 +103,14 @@ class SpoofAppState(val activity: AppCompatActivity) {
         colorStyle = AppSettingsStore.getColorStyle(activity)
     }
 
+    private fun loadAppsPrefs() {
+        appsSortMode = AppSettingsStore.getAppsSortMode(activity)
+        appsConfiguredFirst = AppSettingsStore.isAppsConfiguredFirst(activity)
+        hideSystemAppsInAppSettings = AppSettingsStore.isAppsHideSystem(activity)
+    }
+
     suspend fun initialize() {
+        loadAppsPrefs()
         if (initialized || loading) {
             return
         }
@@ -296,6 +307,18 @@ class SpoofAppState(val activity: AppCompatActivity) {
 
     fun toggleSystemAppsInAppSettings() {
         hideSystemAppsInAppSettings = !hideSystemAppsInAppSettings
+        AppSettingsStore.setAppsHideSystem(activity, hideSystemAppsInAppSettings)
+    }
+
+    fun setAppsSortMode(mode: String) {
+        val v = if (mode == AppSettingsStore.APPS_SORT_PACKAGE) AppSettingsStore.APPS_SORT_PACKAGE else AppSettingsStore.APPS_SORT_NAME
+        appsSortMode = v
+        AppSettingsStore.setAppsSortMode(activity, v)
+    }
+
+    fun toggleAppsConfiguredFirst() {
+        appsConfiguredFirst = !appsConfiguredFirst
+        AppSettingsStore.setAppsConfiguredFirst(activity, appsConfiguredFirst)
     }
 
     suspend fun ensureInstalledAppsLoaded() {
