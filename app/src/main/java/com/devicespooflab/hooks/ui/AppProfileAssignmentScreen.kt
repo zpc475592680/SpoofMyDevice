@@ -2,17 +2,14 @@ package com.devicespooflab.hooks.ui
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.progressSemantics
@@ -21,10 +18,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Block
-import androidx.compose.material.icons.outlined.DeleteSweep
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
@@ -48,7 +41,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.devicespooflab.hooks.R
 import com.devicespooflab.hooks.data.AppProfileStore
@@ -88,11 +80,6 @@ fun AppProfileAssignmentScreen(
     assignedProfileId: String?,
     onProfileSelected: (String?) -> Unit,
     onCreateProfile: () -> Unit,
-    onEditProfile: (String) -> Unit,
-    onClearAppData: () -> Unit,
-    onForceStopApp: () -> Unit,
-    onOpenAppSettings: () -> Unit,
-    dataActionMessage: String?,
     onBack: () -> Unit,
 ) {
     AssignmentScaffold(
@@ -165,26 +152,17 @@ fun AppProfileAssignmentScreen(
                         Icon(Icons.Outlined.AccountBox, contentDescription = null)
                     },
                     trailingContent = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            IconButton(onClick = { onEditProfile(profile.id) }) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Edit,
-                                    contentDescription = stringResource(R.string.profile_edit_title),
-                                    tint = MaterialTheme.colorScheme.primary,
-                                )
-                            }
-                            RadioButton(
-                                selected = profile.id == assignedProfileId,
-                                onClick = null,
-                            )
-                        }
+                        RadioButton(
+                            selected = profile.id == assignedProfileId,
+                            onClick = null,
+                        )
                     },
                     colors = ListItemDefaults.segmentedColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         contentColor = MaterialTheme.colorScheme.onSurface,
                     ),
                 ) {
-                    Text(profile.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(profile.name)
                 }
             }
             item {
@@ -198,59 +176,6 @@ fun AppProfileAssignmentScreen(
                     Spacer(Modifier.size(MdSpacing.xs))
                     Text(stringResource(R.string.app_profile_create))
                 }
-            }
-            item {
-                SectionTitle(stringResource(R.string.app_data_title))
-                Text(
-                    text = stringResource(R.string.app_data_summary, label),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                Spacer(Modifier.height(MdSpacing.xs))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    FilledTonalButton(
-                        onClick = onClearAppData,
-                        modifier = Modifier.weight(1f),
-                    ) {
-                        Icon(Icons.Outlined.DeleteSweep, contentDescription = null)
-                        Spacer(Modifier.width(4.dp))
-                        Text(stringResource(R.string.app_data_clear))
-                    }
-                    FilledTonalButton(
-                        onClick = onForceStopApp,
-                        modifier = Modifier.weight(1f),
-                    ) {
-                        Icon(Icons.Filled.Cancel, contentDescription = null)
-                        Spacer(Modifier.width(4.dp))
-                        Text(stringResource(R.string.app_data_force_stop))
-                    }
-                }
-                Spacer(Modifier.height(8.dp))
-                FilledTonalButton(
-                    onClick = onOpenAppSettings,
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Icon(Icons.Outlined.Info, contentDescription = null)
-                    Spacer(Modifier.width(MdSpacing.xs))
-                    Text(stringResource(R.string.app_data_open_settings))
-                }
-                if (!dataActionMessage.isNullOrBlank()) {
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = dataActionMessage,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                }
-                Text(
-                    text = stringResource(R.string.app_data_need_root),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 8.dp),
-                )
             }
             item { Spacer(Modifier.height(MdSpacing.xl)) }
         }

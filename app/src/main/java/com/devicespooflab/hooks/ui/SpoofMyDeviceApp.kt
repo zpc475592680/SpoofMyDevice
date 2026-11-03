@@ -21,8 +21,6 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.ManageAccounts
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,7 +58,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.devicespooflab.hooks.R
-import com.devicespooflab.hooks.data.AppSettingsStore
 import androidx.core.content.pm.PackageInfoCompat
 
 private enum class AppDestination(
@@ -152,18 +149,6 @@ fun SpoofMyDeviceApp(appState: SpoofAppState) {
                                         onDismissRequest = { appsMenuExpanded = false },
                                     ) {
                                         DropdownMenuItem(
-                                            text = { Text(stringResource(R.string.apps_sort_configured_first)) },
-                                            leadingIcon = {
-                                                Checkbox(
-                                                    checked = appState.appsConfiguredFirst,
-                                                    onCheckedChange = null,
-                                                )
-                                            },
-                                            onClick = {
-                                                appState.toggleAppsConfiguredFirst()
-                                            },
-                                        )
-                                        DropdownMenuItem(
                                             text = { Text(stringResource(R.string.safe_mode_hide_system_apps)) },
                                             leadingIcon = {
                                                 Checkbox(
@@ -173,31 +158,7 @@ fun SpoofMyDeviceApp(appState: SpoofAppState) {
                                             },
                                             onClick = {
                                                 appState.toggleSystemAppsInAppSettings()
-                                            },
-                                        )
-                                        HorizontalDivider()
-                                        DropdownMenuItem(
-                                            text = { Text(stringResource(R.string.apps_sort_by_name)) },
-                                            leadingIcon = {
-                                                RadioButton(
-                                                    selected = appState.appsSortMode == AppSettingsStore.APPS_SORT_NAME,
-                                                    onClick = null,
-                                                )
-                                            },
-                                            onClick = {
-                                                appState.setAppsSortMode(AppSettingsStore.APPS_SORT_NAME)
-                                            },
-                                        )
-                                        DropdownMenuItem(
-                                            text = { Text(stringResource(R.string.apps_sort_by_package)) },
-                                            leadingIcon = {
-                                                RadioButton(
-                                                    selected = appState.appsSortMode == AppSettingsStore.APPS_SORT_PACKAGE,
-                                                    onClick = null,
-                                                )
-                                            },
-                                            onClick = {
-                                                appState.setAppsSortMode(AppSettingsStore.APPS_SORT_PACKAGE)
+                                                appsMenuExpanded = false
                                             },
                                         )
                                     }

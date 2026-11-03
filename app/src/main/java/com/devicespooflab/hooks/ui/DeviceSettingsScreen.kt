@@ -80,7 +80,6 @@ import androidx.core.content.ContextCompat
 import com.devicespooflab.hooks.AppProfileAssignmentActivity
 import com.devicespooflab.hooks.ProfileEditorActivity
 import com.devicespooflab.hooks.R
-import com.devicespooflab.hooks.data.AppSettingsStore
 import com.devicespooflab.hooks.utils.ConfigManager
 import kotlinx.coroutines.launch
 
@@ -151,30 +150,11 @@ fun AppProfilesScreen(appState: SpoofAppState, scaffoldPadding: PaddingValues) {
         appState.ensureInstalledAppsLoaded()
     }
 
-    val assignments = appState.profileState?.assignments ?: emptyMap()
-    val visibleApps = remember(
-        appState.installedApps,
-        appState.hideSystemAppsInAppSettings,
-        appState.appsSortMode,
-        appState.appsConfiguredFirst,
-        assignments,
-    ) {
-        var list = if (appState.hideSystemAppsInAppSettings) {
+    val visibleApps = remember(appState.installedApps, appState.hideSystemAppsInAppSettings) {
+        if (appState.hideSystemAppsInAppSettings) {
             appState.installedApps.filterNot(SafeAppEntry::systemApp)
         } else {
             appState.installedApps
-        }
-        val byName: Comparator<SafeAppEntry> = compareBy(String.CASE_INSENSITIVE_ORDER) { it.label }
-        val byPkg: Comparator<SafeAppEntry> = compareBy { it.packageName }
-        val inner: Comparator<SafeAppEntry> = if (appState.appsSortMode == AppSettingsStore.APPS_SORT_PACKAGE) {
-            byPkg.then(byName)
-        } else {
-            byName.then(byPkg)
-        }
-        if (appState.appsConfiguredFirst) {
-            list.sortedWith(compareBy<SafeAppEntry> { assignments[it.packageName] == null }.then(inner))
-        } else {
-            list.sortedWith(inner)
         }
     }
     AppSelectionList(
@@ -232,9 +212,6 @@ private fun AppSelectionList(
         }
     }
 
-    val configuredCount = remember(filteredApps, profileName) {
-        filteredApps.count { profileName(it.packageName) != null }
-    }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -250,17 +227,7 @@ private fun AppSelectionList(
                 leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) },
                 singleLine = true,
             )
-            Spacer(Modifier.height(MdSpacing.xs))
-            Text(
-                text = stringResource(
-                    R.string.apps_status_format,
-                    configuredCount,
-                    filteredApps.size,
-                ),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Spacer(Modifier.height(MdSpacing.xs))
+            Spacer(Modifier.height(MdSpacing.sm))
         }
         itemsIndexed(
             items = filteredApps,
