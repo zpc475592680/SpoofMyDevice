@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SpoofMyDevice</string>
+    <string name="app_name">幻机</string>
     <string name="xposed_description">用于管理伪装设备配置与运行时 Hook 设置的 LSPosed 配套工具。</string>
     <string name="tab_home">首页</string>
-    <string name="home_title">Spoof My Device</string>
+    <string name="home_title">幻机</string>
     <string name="tab_app_settings">设置</string>
     <string name="tab_app_profiles">按应用设置</string>
     <string name="tab_profile_management">配置文件管理</string>
@@ -218,4 +218,20 @@
     <string name="safe_mode_more_options">更多选项</string>
 
     <string-array name="xposed_scope" />
+
+    <string name="apps_sort_configured_first">已配置优先</string>
+    <string name="apps_sort_by_name">按名称排序</string>
+    <string name="apps_sort_by_package">按包名排序</string>
+    <string name="apps_status_format">已配置 %1$d · 共 %2$d 个应用</string>
+    <string name="app_data_title">应用数据管理</string>
+    <string name="app_data_summary">管 %1$s 的数据。换配置前建议先清掉登录/缓存，免得旧数据串味。</string>
+    <string name="app_data_clear">清除数据</string>
+    <string name="app_data_force_stop">强制停止</string>
+    <string name="app_data_open_settings">打开应用详情</string>
+    <string name="app_data_need_root">清除/强停走 root（su）跑“pm clear / am force-stop”，没 root 会自动跳系统应用详情手动清。</string>
+    <string name="app_data_working">正在执行…</string>
+    <string name="app_data_cleared">已清除重开该应用即生效。</string>
+    <string name="app_data_stopped">已强制停止。</string>
+    <string name="app_data_clear_fail_open">没 root已跳应用详情请手动清除。</string>
+    <string name="app_data_stop_fail_open">没 root已跳应用详情请手动强停。</string>
 </resources>
