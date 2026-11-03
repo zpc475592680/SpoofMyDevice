@@ -63,11 +63,10 @@ jobs:
           echo "run=${{ github.run_id }} sha=${{ github.sha }} time=$(date -u +%FT%TZ)" > build-error.txt
           if [ -f /tmp/build.log ]; then
             cp /tmp/build.log ./build-full.log
-            sed -e 's/${{ secrets.SIGNING_STORE_PASS }}/***/g' -e 's/${{ secrets.SIGNING_KEY_PASS }}/***/g' /tmp/build.log > /tmp/build-clean.log || cp /tmp/build.log /tmp/build-clean.log
-            grep -aE "e: |error:|FAILED|Execution failed|What went wrong|Caused by|Exception" /tmp/build-clean.log | head -c 6000 >> build-error.txt || true
+            grep -aE "e: |error:|FAILED|Execution failed|What went wrong|Caused by|Exception" /tmp/build.log | head -c 6000 >> build-error.txt || true
             echo '' >> build-error.txt
             echo '---TAIL---' >> build-error.txt
-            tail -c 2500 /tmp/build-clean.log >> build-error.txt || true
+            tail -c 2500 /tmp/build.log >> build-error.txt || true
           else
             echo "no /tmp/build.log (failed before build step)" >> build-error.txt
           fi
