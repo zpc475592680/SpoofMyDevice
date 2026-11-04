@@ -58,6 +58,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.devicespooflab.hooks.R
 import com.devicespooflab.hooks.data.AppSettingsStore
@@ -220,7 +221,7 @@ fun SpoofMyDeviceApp(appState: SpoofAppState) {
                                             contentDescription = null,
                                         )
                                     },
-                                    label = { Text(stringResource(item.labelRes)) },
+                                    label = { Text(stringResource(item.labelRes), maxLines = 1, overflow = TextOverflow.Ellipsis) },
                                 )
                             }
                         }
@@ -298,7 +299,7 @@ private fun CollapsedNavigationRail(
                         contentDescription = null,
                     )
                 },
-                label = { Text(stringResource(item.labelRes)) },
+                label = { Text(stringResource(item.labelRes), maxLines = 1, overflow = TextOverflow.Ellipsis) },
             )
         }
     }
@@ -332,7 +333,7 @@ private fun ExpandedNavigationDrawer(
                         contentDescription = null,
                     )
                 },
-                label = { Text(stringResource(item.labelRes)) },
+                label = { Text(stringResource(item.labelRes), maxLines = 1, overflow = TextOverflow.Ellipsis) },
                 modifier = Modifier.padding(horizontal = 12.dp),
             )
         }
