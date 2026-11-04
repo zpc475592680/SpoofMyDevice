@@ -5,8 +5,8 @@
     <string name="tab_home">首页</string>
     <string name="home_title">幻机</string>
     <string name="tab_app_settings">设置</string>
-    <string name="tab_app_profiles">按应用设置</string>
-    <string name="tab_profile_management">配置文件管理</string>
+    <string name="tab_app_profiles">应用配置</string>
+    <string name="tab_profile_management">配置管理</string>
     <string name="back">返回</string>
     <string name="navigation_expand">展开导航</string>
     <string name="navigation_collapse">收起导航</string>
