@@ -2,7 +2,7 @@ name: build-huanji
 on:
   workflow_dispatch:
   push:
-    branches: [huanji2]
+    branches: [huanji3]
 permissions:
   contents: write
 jobs:
@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: huanji2
+          ref: huanji3
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -53,8 +53,8 @@ jobs:
         if: success()
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.0.1-huanji2
-          name: 幻机 v2.0.1-huanji2
+          tag_name: v2.0.1-huanji3
+          name: 幻机 v2.0.1-huanji3
           files: app/build/outputs/apk/release/huanji-release-signed.apk
       - name: Report error log
         if: failure()
@@ -75,8 +75,8 @@ jobs:
           git config user.email "bot@local"
           git config user.name "huanji-bot"
           git add -f build-error.txt
-          git commit -m "huanji2 build error log run ${{ github.run_id }} [skip ci]" || true
-          git push origin HEAD:huanji2 || true
+          git commit -m "huanji3 build error log run ${{ github.run_id }} [skip ci]" || true
+          git push origin HEAD:huanji3 || true
       - name: Upload failure logs
         if: failure()
         uses: actions/upload-artifact@v4
